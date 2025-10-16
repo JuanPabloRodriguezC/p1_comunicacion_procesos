@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <semaphore.h>
 #include <sys/mman.h>
-#include <sys/stat.h>
+#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
@@ -51,14 +50,6 @@ int main(int argc, char *argv[]) {
     int buffer_size = shm_temp->buffer_size;
     char filename[MAX_FILENAME];
     strncpy(filename, shm_temp->filename, MAX_FILENAME);
-    
-    if (buffer_size <= 0 || buffer_size > 10000) {
-        fprintf(stderr, "Error: buffer_size inválido (%d)\n", buffer_size);
-        munmap(shm_temp, base_size);
-        close(shm_fd);
-        return 1;
-    }
-
     munmap(shm_temp, base_size);
 
     // Paso 2: Mapear con el tamaño completo

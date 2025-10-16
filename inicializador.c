@@ -9,6 +9,7 @@
 #include <time.h>
 #include <semaphore.h>
 #include <errno.h>
+#include <string.h>
 #include "memoria_compartida.h"
 
 int main(int argc, char *argv[]) {

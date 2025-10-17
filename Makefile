@@ -1,20 +1,24 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -pthread -lrt -O2
-TARGETS = inicializador emisor receptor finalizador
+OUTDIR = out
+TARGETS = $(OUTDIR)/inicializador $(OUTDIR)/emisor $(OUTDIR)/receptor $(OUTDIR)/finalizador
 
-all: $(TARGETS)
+all: $(OUTDIR) $(TARGETS)
 
-inicializador: inicializador.c memoria_compartida.h
-	$(CC) $(CFLAGS) -o inicializador inicializador.c
+$(OUTDIR):
+	mkdir -p $(OUTDIR)
 
-emisor: emisor.c memoria_compartida.h
-	$(CC) $(CFLAGS) -o emisor emisor.c
+$(OUTDIR)/inicializador: inicializador.c memoria_compartida.h
+	$(CC) $(CFLAGS) -o $(OUTDIR)/inicializador inicializador.c
 
-receptor: receptor.c memoria_compartida.h
-	$(CC) $(CFLAGS) -o receptor receptor.c
+$(OUTDIR)/emisor: emisor.c memoria_compartida.h
+	$(CC) $(CFLAGS) -o $(OUTDIR)/emisor emisor.c
 
-finalizador: finalizador.c memoria_compartida.h
-	$(CC) $(CFLAGS) -o finalizador finalizador.c
+$(OUTDIR)/receptor: receptor.c memoria_compartida.h
+	$(CC) $(CFLAGS) -o $(OUTDIR)/receptor receptor.c
+
+$(OUTDIR)/finalizador: finalizador.c memoria_compartida.h
+	$(CC) $(CFLAGS) -o $(OUTDIR)/finalizador finalizador.c
 
 clean:
 	rm -f $(TARGETS)

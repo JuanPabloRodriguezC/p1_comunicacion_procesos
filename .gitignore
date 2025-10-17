@@ -1,41 +1,4 @@
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-
-# Shared objects
-*.so
-*.so.*
-*.dylib
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled headers
-*.gch
-*.pch
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb   
+out/*
 
 *.vscode
+

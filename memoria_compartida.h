@@ -5,6 +5,14 @@
 #include <time.h>
 
 #define MAX_FILENAME 256
+// Códigos de color ANSI
+#define COLOR_RESET   "\x1b[0m"
+#define COLOR_GREEN   "\x1b[32m"
+#define COLOR_CYAN    "\x1b[36m"
+#define COLOR_YELLOW  "\x1b[33m"
+#define COLOR_RED     "\x1b[31m"
+#define COLOR_BLUE    "\x1b[34m"
+#define COLOR_MAGENTA "\x1b[35m"
 
 // Información de auditoría de cada carácter
 typedef struct {
@@ -15,26 +23,22 @@ typedef struct {
 
 // Estructura de la memoria compartida
 typedef struct {
-    // Semáforos para el patrón productor-consumidor
-    sem_t espacios_libres;    // Cuenta cuántos espacios hay disponibles para escribir
-    sem_t espacios_ocupados;  // Cuenta cuántos espacios tienen datos para leer
-    sem_t mutex;              // Protege el acceso a índices compartidos
+    sem_t espacios_libres; 
+    sem_t espacios_ocupados;
+    sem_t mutex;// Protege el acceso memoria compartida
+    sem_t file_mutex;
     
-    // Información del archivo y configuración
     char filename[MAX_FILENAME];  
-    int buffer_size;
-    
-    // Índices del buffer circular
+
+    int file_read_position;
     int write_index;          // Dónde escribir el próximo carácter
     int read_index;           // Dónde leer el próximo carácter
-    
-    // Estadísticas
-    int chars_transferidos;   // Total de caracteres que han pasado por el buffer
+    int chars_transferidos;   // estadisticas
     int emisores_activos;
     int receptores_activos;
-    int finalizar;            // Flag para señalar fin
-    
-    // Buffer circular (tamaño variable)
+    int finalizar;            // Senal finalizacion
+
+    int buffer_size;
     char_info_t buffer[];
 } shared_mem_t;
 

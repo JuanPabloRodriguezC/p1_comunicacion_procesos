@@ -1,21 +1,17 @@
-// initializer.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <time.h>
 #include <semaphore.h>
 #include <errno.h>
-#include <string.h>
 #include "memoria_compartida.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 4) {
         fprintf(stderr, "Uso: %s <identificador_shm> <tamaño_buffer> <archivo_fuente>\n", argv[0]);
-        fprintf(stderr, "Ejemplo: %s /mi_shm 10 input.txt\n", argv[0]);
+        fprintf(stderr, "Ejemplo: %s /mi_memoria 10 input.txt\n", argv[0]);
         return 1;
     }
 
@@ -24,8 +20,8 @@ int main(int argc, char *argv[]) {
     // Validar y convertir el tamaño del buffer
     char *endptr;
     long buffer_size = strtol(argv[2], &endptr, 10);
-    if (*endptr != '\0' || buffer_size <= 0 || buffer_size > 10000) {
-        fprintf(stderr, "Error: El tamaño del buffer debe ser un entero positivo (1-10000)\n");
+    if (*endptr != '\0' || buffer_size <= 0) {
+        fprintf(stderr, "Error: El tamaño del buffer debe ser un entero positivo\n");
         return 1;
     }
 
@@ -60,7 +56,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // Establecer el tamaño
+    // Establecer el tamaño de archivo
     if (ftruncate(shm_fd, shm_size) == -1) {
         perror("Error al establecer tamaño de memoria compartida");
         close(shm_fd);
@@ -82,7 +78,6 @@ int main(int argc, char *argv[]) {
     memset(shm, 0, shm_size);
 
     // Inicializar semáforos
-    // CLAVE: espacios_libres empieza en buffer_size (todos los espacios están libres)
     if (sem_init(&shm->espacios_libres, 1, buffer_size) == -1) {
         perror("Error al inicializar espacios_libres");
         munmap(shm, shm_size);
@@ -91,7 +86,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // CLAVE: espacios_ocupados empieza en 0 (no hay datos para leer)
     if (sem_init(&shm->espacios_ocupados, 1, 0) == -1) {
         perror("Error al inicializar espacios_ocupados");
         sem_destroy(&shm->espacios_libres);
@@ -101,7 +95,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // mutex para proteger secciones críticas
     if (sem_init(&shm->mutex, 1, 1) == -1) {
         perror("Error al inicializar mutex");
         sem_destroy(&shm->espacios_libres);
@@ -112,30 +105,29 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    printf("✓ Semáforos configurados\n");
+    if (sem_init(&shm->file_mutex, 1, 1) == -1) {
+        perror("Error al inicializar file_mutex");
+        sem_destroy(&shm->espacios_libres);
+        sem_destroy(&shm->espacios_ocupados);
+        sem_destroy(&shm->mutex);
+        munmap(shm, shm_size);
+        close(shm_fd);
+        shm_unlink(shm_name);
+        return 1;
+    }
 
-    // Inicializar estructura de datos compartidos
+    // Inicializar estructura de datos compartidos 
     strncpy(shm->filename, filename, MAX_FILENAME - 1);
     shm->filename[MAX_FILENAME - 1] = '\0';
     shm->buffer_size = (int)buffer_size;
-    shm->write_index = 0;
-    shm->read_index = 0;
-    shm->chars_transferidos = 0;
-    shm->emisores_activos = 0;
-    shm->receptores_activos = 0;
-    shm->finalizar = 0;
 
-    printf("✓ Memoria compartida inicializada exitosamente\n");
-
-    // Inicializar el buffer circular
     for (int i = 0; i < buffer_size; i++) {
         shm->buffer[i].valor = 0;
         shm->buffer[i].posicion = -1;
         shm->buffer[i].timestamp = 0;
     }
     
-    printf("✓ Buffer circular listo\n");
-    printf("\nPuede ejecutar los procesos emisor y receptor ahora.\n");
+    printf("Memoria compartida inicializada exitosamente\n");
 
     // Limpiar recursos
     munmap(shm, shm_size);

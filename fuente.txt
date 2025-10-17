@@ -1,0 +1,22 @@
+El curso cubre los principales servicios que comprende un sistema operativo:
+administración del procesador, administración de la memoria principal,
+administración de dispositivos, protección y seguridad.
+Este curso se presenta como un pilar para la administración y protección de
+recursos computacionales. Con ello los estudiantes estarán en capacidad de
+tomar decisiones más acertadas en relación con temas tanto teóricos como
+prácticos.
+Entre las habilidades que el estudiante desarrolla en el curso se pueden
+nombrar: capacidad de análisis, reconocimiento y uso de algoritmos en los
+sistemas operativos; además de la implementación de teoría clásica de
+Sistemas Operativos para la solución de problemas en otras capas del
+computador.
+Por otro lado, el curso presenta teoría importante que es necesaria para la
+comprensión de los conceptos a desarrollar en el curso CE-5301 Redes de
+Computadoras.
+Se pretende reforzar actitudes y valores como la tolerancia, responsabilidad,
+ética, capacidad de trabajo en equipo y comunicación. Además, se pretenden
+desarrollar los atributos de Trabajo en Equipo (TE) y Aprendizaje Continuo
+(AC) a nivel avanzado.
+En caso de que se presente alguna necesidad educativa especial, se atenderá
+según los mecanismos establecidos, en cooperación con el Departamento de
+Orientación y Psicología (DOP).

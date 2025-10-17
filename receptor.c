@@ -193,7 +193,7 @@ int main(int argc, char* argv[]){
         // Intentar leer (puede bloquearse si buffer está vacío)
         if (sem_trywait(&shm->espacios_ocupados) == -1) {
             if (errno == EAGAIN) {
-                printf(COLOR_RED "  ⚠ Buffer vacío, esperando datos...\n" COLOR_RESET);
+                printf(COLOR_RED "Buffer vacío, esperando datos...\n" COLOR_RESET);
                 sem_wait(&shm->espacios_ocupados);
                 
                 // Verificar de nuevo después de despertar

@@ -1,4 +1,3 @@
-// emisor.c (VERSIÓN COMPLETA CON MODOS)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +34,7 @@ void enable_raw_mode() {
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
-// Esperar por una tecla en modo manual (sin busy waiting)
+// Esperar por una tecla en modo manual
 int wait_for_keypress() {
     fd_set readfds;
     FD_ZERO(&readfds);
@@ -57,7 +56,7 @@ int wait_for_keypress() {
     return 0;
 }
 
-// Esperar en modo automático (con sleep)
+// Esperar en modo automático
 void wait_automatic(int interval_ms) {
     usleep(interval_ms * 1000);
 }
@@ -213,7 +212,7 @@ int main(int argc, char *argv[]) {
         // Ahora intentar escribir en el buffer
         if (sem_trywait(&shm->espacios_libres) == -1) {
             if (errno == EAGAIN) {
-                printf(COLOR_RED "  ⚠ Buffer lleno, esperando espacio...\n" COLOR_RESET);
+                printf(COLOR_RED "Buffer lleno, esperando espacio...\n" COLOR_RESET);
                 sem_wait(&shm->espacios_libres);
                 
                 // Verificar de nuevo si debemos finalizar después de despertar

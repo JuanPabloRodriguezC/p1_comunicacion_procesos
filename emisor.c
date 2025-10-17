@@ -14,7 +14,7 @@
 
 
 
-// Configuración del terminal para modo raw (leer sin esperar Enter)
+// Configuración del terminal para modo raw
 struct termios orig_termios;
 volatile sig_atomic_t keep_running = 1;
 
@@ -183,8 +183,8 @@ int main(int argc, char *argv[]) {
             }
         }
         
-        // ===== COORDINAR LECTURA DEL ARCHIVO =====
-        sem_wait(&shm->file_mutex);  // ← Mutex para el archivo
+        // coordinación para leer del archivo
+        sem_wait(&shm->file_mutex);
         
         // Ir a la posición compartida
         if (fseek(archivo, shm->file_read_position, SEEK_SET) != 0) {
